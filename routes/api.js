@@ -249,13 +249,18 @@ router.get('/download/facebook', async (req, res, next) => {
 router.get('/download/instagram', async (req, res, next) => {
           var apikey = req.query.apikey
           var url = req.query.url
-       	if(!apikey) return res.json(loghandler.noapikey)
-       if (!url) return res.json({ status : false, creator : `${creator}`, message : "masukan parameter username"})
+       	if(!apikey) return res.json(loghandler.apikey)
+       if (!url) return res.json({ status : false, creator : `${creator}`, message : "masukan parameter url"})
         if(listkey.includes(apikey)){
-       let iglu = await scr.instagramdl(url).catch(async _ => await scr.instagramdlv2(url)).catch(async _ => await scr.instagramdlv3(url)).catch(async _ => await scr.instagramdlv4(url))
-		var result = iglu;
+         fetch(encodeURI(`https://api.akuari.my.id/downloader/igdl2?link=${url}`))
+      .then(response => response.json())
+	    .then(data => {
+		var result = data.respon;
 		res.json({
+      status: 200,
+      author: creator,
 			result
+		})
 		})
          .catch(e => {
          	console.log(e);
